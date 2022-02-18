@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/bikeFragment2"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Available Bikes" />
+        <item
+            android:id="@+id/firstFragment"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Date Selection" />
+        <item
+            android:id="@+id/myBikeFragment"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Registrer My Bike" />
+
+        <item
+            android:id="@+id/bikesMap"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Available Bikes" />
+    </group>
+</menu>
