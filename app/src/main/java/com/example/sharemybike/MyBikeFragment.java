@@ -28,12 +28,14 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.Executor;
 
 /**
@@ -55,6 +57,8 @@ public class MyBikeFragment extends Fragment {
     TextView nombre;
     Button addBike;
     ImageView imagen;
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -187,6 +191,7 @@ public class MyBikeFragment extends Fragment {
         addBike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                inicializarFirebase();
                 Bike b = new Bike();
                 b.setOwner(nombre.getText().toString());
                 b.setCity(direccion.getText().toString());
@@ -194,13 +199,21 @@ public class MyBikeFragment extends Fragment {
                 b.setDescription(descripcion.getText().toString());
                 b.setLongitude(longitud);
                 b.setLatitude(latitud);
-                b.setPhoto(imagen.getDrawingCache());
-                BikeFragment2.list.add(b);
+                b.setImage("gs://sharemybike-db97d.appspot.com/bici.jpg");
+                b.setId(UUID.randomUUID().toString());
+                databaseReference.child("bikes_list").child(b.getId()).setValue(b);
+                //BikeFragment2.list.add(b);
 
                 direccion.setText("");
                 ciudad.setText("");
                 descripcion.setText("");
             }
         });
+    }
+
+    private void inicializarFirebase() {
+        FirebaseApp.initializeApp(getContext());
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference();
     }
 }

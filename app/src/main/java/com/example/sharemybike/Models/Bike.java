@@ -11,6 +11,7 @@ public class Bike {
     private Double longitude;
     private Double latitude;
     private String location;
+    private String id;
 
     public Bike(String image, String owner, String description, String city, Double longitude, Double latitude, String location, String email) {
         this.image = image;
@@ -21,6 +22,14 @@ public class Bike {
         this.latitude = latitude;
         this.location = location;
         this.email = email;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Double getLatitude() {

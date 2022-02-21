@@ -19,6 +19,10 @@ public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
 
+    private CalendarView calendario;
+    private TextView fecha;
+    public static String nuevaFecha = "";
+
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -26,6 +30,24 @@ public class FirstFragment extends Fragment {
     ) {
 
         binding = FragmentFirstBinding.inflate(inflater, container, false);
+        calendario = binding.calendarView;
+        fecha = binding.txtFechaSeleccionada;
+        /*
+        Al calendario se le añade el evento onSelectedDayChange que lleva como parámetro un CalendarView y 3 enteros que van a guardar
+        los datos seleccionados en el calendario, con su orden correspondiente (primero el año, luego mes y luego el día).
+        Le añado la anotación @NonNull para obligar que el usuario tenga que seleccionar una fecha antes de hacer la reserva
+        */
+        calendario.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                //Al mes hay que sumarle 1 porque comienza desde 0 y da mal el resultado
+                month = month + 1;
+                //Se guarda en un String el resultado, y se settea al TextView
+                nuevaFecha = "Date: " + dayOfMonth + "/" + month + "/" + year;
+                fecha.setText(nuevaFecha);
+            }
+        });
+
         return binding.getRoot();
 
     }

@@ -43,7 +43,7 @@ public class BikeFragment2 extends Fragment {
 
     private DatabaseReference database;
     private AdapterBikes adapter;
-    public static final ArrayList<Bike> list = new ArrayList<>();
+    public static ArrayList<Bike> list;
     private StorageReference mStorageReference;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -96,6 +96,7 @@ public class BikeFragment2 extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        list = new ArrayList<>();
 
         adapter = new AdapterBikes(getContext(), list);
         recyclerView.setAdapter(adapter);

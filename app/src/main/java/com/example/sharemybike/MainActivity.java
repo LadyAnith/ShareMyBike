@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseUser user = null;
-    private DrawerLayout drawer = null;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -160,7 +159,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             signInButton.setVisibility(View.GONE);
             signOutButton.setVisibility(View.VISIBLE);
             //Lanzo la actividad MainPanelActivity al logguearse
-            setContentView(R.layout.activity_main_panel);
+            Intent i = new Intent(MainActivity.this, MainPanelActivity.class);
+            startActivity(i);
+
+
         } else {
             signInButton.setVisibility(View.VISIBLE);
             signOutButton.setVisibility(View.GONE);

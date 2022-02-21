@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sharemybike.Models.Bike;
 import com.example.sharemybike.Models.UserBooking;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
@@ -20,10 +21,13 @@ import com.google.firebase.database.ServerValue;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class AdapterBikes extends RecyclerView.Adapter<AdapterBikes.MyViewHolder> {
     Context context;
     ArrayList<Bike> list;
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
 
     public AdapterBikes(Context context, ArrayList<Bike> list) {
         this.context = context;
@@ -48,12 +52,23 @@ public class AdapterBikes extends RecyclerView.Adapter<AdapterBikes.MyViewHolder
         holder.mail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                inicializarFirebase();
                 String userEmail = "anithdeveloper@gmail.com";
-                //UserBooking booking = new UserBooking(userEmail, bike.getEmail(), bike.getCity(), );
+                String fecha = FirstFragment.nuevaFecha;
+                UserBooking booking = new UserBooking(userEmail, bike.getEmail(), bike.getCity(),fecha);
+                booking.setUserId(UUID.randomUUID().toString());
+
+                databaseReference.child("booking_request").child(booking.getUserId()).setValue(booking);
 
             }
         });
 
+    }
+
+    private void inicializarFirebase() {
+        FirebaseApp.initializeApp(context.getApplicationContext());
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference();
     }
 
     @Override
@@ -82,10 +97,6 @@ public class AdapterBikes extends RecyclerView.Adapter<AdapterBikes.MyViewHolder
         }
     }
 
-    public void bookingBike(UserBooking booking){
-        DatabaseReference mDatabase= FirebaseDatabase.getInstance().getReference();
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("booking_request/"+booking, true);
-        mDatabase.updateChildren(updates);
-    }
+
+
 }
