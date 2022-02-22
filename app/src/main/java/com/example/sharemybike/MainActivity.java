@@ -34,9 +34,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    //Atributos necesarios
     private static final int RC_SIGN_IN = 123;
-    SignInButton signInButton;
-    Button signOutButton;
+    private SignInButton signInButton;
+    private Button signOutButton;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseUser user = null;
@@ -48,8 +49,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
 
-        signOutButton= findViewById(R.id.signoutButton);
-        signInButton= findViewById(R.id.signInButton);
+        signOutButton = findViewById(R.id.signoutButton);
+        signInButton = findViewById(R.id.signInButton);
         updateUI(user);
 
         signInButton.setOnClickListener(this);
@@ -58,25 +59,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         requestGoogleSignIn();
 
-        //Evento encargado de llamar al BikeActivity al pulsar el botón de Login
-        /*
-        botonLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, BikeActivity.class);
-                startActivity(i);
-            }
-        });
-
-         */
-
+        //Permisos que necesito para acceder a la localización del movil
         ActivityResultLauncher<String[]> locationPermissionRequest =
                 registerForActivityResult(new ActivityResultContracts
                                 .RequestMultiplePermissions(), result -> {
                             Boolean fineLocationGranted = result.getOrDefault(
                                     Manifest.permission.ACCESS_FINE_LOCATION, false);
                             Boolean coarseLocationGranted = result.getOrDefault(
-                                    Manifest.permission.ACCESS_COARSE_LOCATION,false);
+                                    Manifest.permission.ACCESS_COARSE_LOCATION, false);
                             if (fineLocationGranted != null && fineLocationGranted) {
                                 // Precise location access granted.
                             } else if (coarseLocationGranted != null && coarseLocationGranted) {
@@ -87,32 +77,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                 );
 
-// ...
-
-// Before you perform the actual permission request, check whether your app
-// already has the permissions, and whether your app needs to show a permission
-// rationale dialog. For more details, see Request permissions.
-        locationPermissionRequest.launch(new String[] {
+        locationPermissionRequest.launch(new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION
         });
     }
 
-    private void requestGoogleSignIn(){
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-    }
-
-    private void signIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-
-    }
-
+    /**
+     * Método que comprueba si es correcto el login y no se ha denegado
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -132,6 +109,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * Método que obtiene las credenciales del usuario que se acaba de logguear
+     *
+     * @param idToken
+     */
     private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         mAuth.signInWithCredential(credential)
@@ -152,13 +134,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
     }
 
-    public void updateUI(FirebaseUser user){
+    /**
+     * Método encargado de comprobar si la autentificación del usuario no es correcta, se actualiza la página
+     * y vuelve a mostrar el botón de loggin, si es correcta, accede al activity MainPanelActivity
+     * @param user
+     */
+    public void updateUI(FirebaseUser user) {
         if (user != null) {
-            Toast.makeText(this,"Bienvenido "+user.getDisplayName()
-                    +"["+user.getEmail()+"]",Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Bienvenido " + user.getDisplayName()
+                    + "[" + user.getEmail() + "]", Toast.LENGTH_LONG).show();
             signInButton.setVisibility(View.GONE);
             signOutButton.setVisibility(View.VISIBLE);
-            //Lanzo la actividad MainPanelActivity al logguearse
+            //Lanzo la actividad MainPanelActivity al logguearse correctamente
             Intent i = new Intent(MainActivity.this, MainPanelActivity.class);
             startActivity(i);
 
@@ -169,6 +156,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * Método para hacer loggin con una cuenta de google
+     */
+    private void requestGoogleSignIn() {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+    }
+
+    /**
+     * Método para loggearse
+     */
+    private void signIn() {
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+
+    }
+
+    /**
+     * Método encargado de hacer logout
+     */
     private void signOut() {
         // Firebase sign out
         mAuth.signOut();
@@ -182,6 +193,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
     }
 
+    /**
+     * Evento on click que lanzará el loggin o el logout dependiendo del botón que se pulse
+     *
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         int i = v.getId();

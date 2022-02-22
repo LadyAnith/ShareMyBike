@@ -14,10 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.sharemybike.Models.Bike;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,33 +32,76 @@ import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
+ * Use the {@link BikeFragment#newInstance} factory method to
+ * create an instance of this fragment.
  */
 public class BikeFragment extends Fragment {
+
+    //Atributos necesarios
     private static final String TAG = "FirebaseStorage";
     private View bikesView;
     private RecyclerView recyclerView;
 
     private DatabaseReference database;
     private AdapterBikes adapter;
-    private ArrayList<Bike> list;
+    //Genero el listado como estático para utilizarlo en  las demás clases que me sea necesario
+    public static ArrayList<Bike> list;
     private StorageReference mStorageReference;
 
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
 
     public BikeFragment() {
+        // Required empty public constructor
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment BikeFragment2.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static BikeFragment newInstance(String param1, String param2) {
+        BikeFragment fragment = new BikeFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         bikesView = inflater.inflate(R.layout.fragment_bike, container, false);
 
+        //Invoco al RecyclerView
         recyclerView = (RecyclerView) bikesView.findViewById(R.id.bike_list);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         list = new ArrayList<>();
+
+        //Añado al adaptador el listado
         adapter = new AdapterBikes(getContext(), list);
         recyclerView.setAdapter(adapter);
         loadBikesList();
@@ -69,6 +109,9 @@ public class BikeFragment extends Fragment {
         return bikesView;
     }
 
+    /**
+     * Método encargado de cargar un listado desde el firebase
+     */
     private void loadBikesList() {
         if (list.isEmpty()) {
             database = FirebaseDatabase.getInstance().getReference();
@@ -79,7 +122,9 @@ public class BikeFragment extends Fragment {
 
                     for (DataSnapshot productSnapshot : snapshot.getChildren()) {
                         Bike bike = productSnapshot.getValue(Bike.class);
+                        //Invoco el método encargado de cargar las imagenes de la BBDD
                         downloadPhoto(bike);
+                        //Guardo el listado de bicis de la BBDD en un listado
                         list.add(bike);
                     }
                     adapter.notifyDataSetChanged();
@@ -93,6 +138,10 @@ public class BikeFragment extends Fragment {
     }
 
 
+    /**
+     * Con este método, cargo las imágenes de la base de datos
+     * @param c
+     */
     private void downloadPhoto(Bike c) {
 
         mStorageReference = FirebaseStorage.getInstance().getReferenceFromUrl(c.getImage());

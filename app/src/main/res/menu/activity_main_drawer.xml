@@ -5,7 +5,7 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/bikeFragment2"
+            android:id="@+id/bikeFragment"
             android:icon="@drawable/ic_menu_camera"
             android:title="Available Bikes" />
         <item

@@ -19,14 +19,14 @@ import com.example.sharemybike.databinding.ActivityMainPanelBinding;
 public class MainPanelActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    private ActivityMainPanelBinding binding;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityMainPanelBinding.inflate(getLayoutInflater());
+        ActivityMainPanelBinding binding = ActivityMainPanelBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarMainPanel.toolbar);

@@ -11,14 +11,8 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CalendarView;
-import android.widget.DatePicker;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.navigation.NavController;
@@ -27,15 +21,6 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.sharemybike.databinding.ActivityBikeBinding;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 public class BikeActivity extends AppCompatActivity {
 
@@ -86,7 +71,7 @@ public class BikeActivity extends AppCompatActivity {
         });
 
         //Método para leer un fichero JSON
-        BikesContent.loadBikesFromFirebase();
+        //BikesContent.loadBikesFromFirebase();
     }
 
     @Override

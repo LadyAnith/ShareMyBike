@@ -55,17 +55,6 @@ public class FirstFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //Con este método, mando los datos de la fecha al pulsar el botón a otro fragmento
-        binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                String fecha = (String) BikeActivity.fecha.getText();
-                if (fecha.contains("/"))
-                    NavHostFragment.findNavController(FirstFragment.this)
-                            .navigate(R.id.action_FirstFragment_to_itemFragment);
-            }
-        });
     }
 
     @Override

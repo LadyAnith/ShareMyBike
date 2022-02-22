@@ -99,6 +99,7 @@ public class MyBikeFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        //Añado un objeto FusedLocationClient, que será el encargado de extraer las coordenadas
         fusedLocationClient = LocationServices.
                 getFusedLocationProviderClient(getContext());
 
@@ -131,6 +132,9 @@ public class MyBikeFragment extends Fragment {
         }
     }
 
+    /**
+     * Este método indica la ubicación del dispositivo y la atualiza cada 10 segundos
+     */
     @SuppressLint("MissingPermission")
     private void solicitaUbicacion(){
         LocationRequest locationRequest = LocationRequest.create();
@@ -144,6 +148,9 @@ public class MyBikeFragment extends Fragment {
 
     }
 
+    /**
+     * Listener que comprueba que la ubicación del dispositivo se obtuvo de forma correcta
+     */
     OnSuccessListener<Location> locationOnSuccessListener = new OnSuccessListener<Location>() {
         @Override
         public void onSuccess(Location location) {
@@ -155,6 +162,9 @@ public class MyBikeFragment extends Fragment {
         }
     };
 
+    /**
+     * Listener que actualiza las coordenadas
+     */
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
@@ -172,6 +182,9 @@ public class MyBikeFragment extends Fragment {
         }
     };
 
+    /**
+     * Actualizo la interfaz del usuario, mostrando las coordenadas en el lugar correspondiente del txt
+     */
     private void updateIU(){
         txtLongitud = getActivity().findViewById(R.id.txtxLonguitude);
         txtLatitud = getActivity().findViewById(R.id.txtxLatitude);
@@ -199,11 +212,14 @@ public class MyBikeFragment extends Fragment {
                 b.setDescription(descripcion.getText().toString());
                 b.setLongitude(longitud);
                 b.setLatitude(latitud);
+                //Añado una imagen de la base de datos de manera manual
                 b.setImage("gs://sharemybike-db97d.appspot.com/bici.jpg");
+                //Creo de forma automática la id del elemento del listado
                 b.setId(UUID.randomUUID().toString());
                 databaseReference.child("bikes_list").child(b.getId()).setValue(b);
-                //BikeFragment2.list.add(b);
+                //BikeFragment.list.add(b);
 
+                //Una vez clicado el botón, elimino los datos escritos
                 direccion.setText("");
                 ciudad.setText("");
                 descripcion.setText("");
@@ -211,6 +227,9 @@ public class MyBikeFragment extends Fragment {
         });
     }
 
+    /**
+     * Método que inicializa el Firebase
+     */
     private void inicializarFirebase() {
         FirebaseApp.initializeApp(getContext());
         firebaseDatabase = FirebaseDatabase.getInstance();

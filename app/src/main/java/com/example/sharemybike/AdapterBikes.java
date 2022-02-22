@@ -29,6 +29,11 @@ public class AdapterBikes extends RecyclerView.Adapter<AdapterBikes.MyViewHolder
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
 
+    /**
+     * Método constructor
+     * @param context
+     * @param list
+     */
     public AdapterBikes(Context context, ArrayList<Bike> list) {
         this.context = context;
         this.list = list;
@@ -53,11 +58,15 @@ public class AdapterBikes extends RecyclerView.Adapter<AdapterBikes.MyViewHolder
             @Override
             public void onClick(View v) {
                 inicializarFirebase();
+                //Variable donde guardo el e-mail
                 String userEmail = "anithdeveloper@gmail.com";
+                //Variable que guarda la fecha seleccionada en el FirstFragment
                 String fecha = FirstFragment.nuevaFecha;
+                //Objeto de la clase UserBooking
                 UserBooking booking = new UserBooking(userEmail, bike.getEmail(), bike.getCity(),fecha);
+                //Genero de manera automática una ID para el usuario
                 booking.setUserId(UUID.randomUUID().toString());
-
+                //Añado a la base de datos información de la reserva
                 databaseReference.child("booking_request").child(booking.getUserId()).setValue(booking);
 
             }
@@ -65,6 +74,9 @@ public class AdapterBikes extends RecyclerView.Adapter<AdapterBikes.MyViewHolder
 
     }
 
+    /**
+     * Método que inicializa la conexión con el Firebase
+     */
     private void inicializarFirebase() {
         FirebaseApp.initializeApp(context.getApplicationContext());
         firebaseDatabase = FirebaseDatabase.getInstance();

@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.sharemybike.Models.Bike;
-import com.example.sharemybike.bikes.BikesContent;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -20,40 +19,30 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 public class BikesMap extends Fragment {
     private GoogleMap mMap;
-    private DatabaseReference database;
     private ArrayList<Bike> list;
 
+    /**
+     * Método que muestra las ubicaciones de las bicicletas en el mapa con un marcador
+     * y las une con polilíneas
+     */
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
-        /**
-         * Manipulates the map once available.
-         * This callback is triggered when the map is ready to be used.
-         * This is where we can add markers or lines, add listeners or move the camera.
-         * In this case, we just add a marker near Sydney, Australia.
-         * If Google Play services is not installed on the device, the user will be prompted to
-         * install it inside the SupportMapFragment. This method will only be triggered once the
-         * user has installed Google Play services and returned to the app.
-         */
         @Override
         public void onMapReady(GoogleMap googleMap) {
             mMap = googleMap;
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             PolylineOptions poly=new PolylineOptions();
 
-            if(!BikeFragment2.list.isEmpty()){
+            if(!BikeFragment.list.isEmpty()){
 
             //for each bike in the list
-            for (Bike c : BikeFragment2.list) {
+            for (Bike c : BikeFragment.list) {
 
                 //gets its latitude and longitude
                 LatLng ll = new LatLng(Double.valueOf(c.getLatitude()), Double.valueOf(c.getLongitude()));
@@ -68,7 +57,7 @@ public class BikesMap extends Fragment {
             CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 100);
             mMap.animateCamera(cu);
             }else{
-                System.out.println("ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOORRRRRRRRRRRRRRRG");
+                System.out.println("ERROR");
             }
         }
     };
